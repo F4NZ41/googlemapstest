@@ -1,73 +1,83 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Simple Map</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <style type="text/css">
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
+<!doctype html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css"
+    type="text/css">
+  <style>
+    body {
+      margin: 0;
+    }
+
+    .map {
+      height: 90vh;
+      width: 100%;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
+  <title>OpenLayers example</title>
+</head>
+
+<body>
+  <div id="map" class="map"></div>
+  <button onclick="getLocation()">asdasd</button>
+
+
+
+  <script type="text/javascript">
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
       }
+    }
 
-      /* Optional: Makes the sample page fill the window. */
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-    <script>
-        let map;
+    function showPosition(position) {
+      console.log(position.coords.latitude);
+      console.log(position.coords.longitude);
+      latt = position.coords.latitude;
+      long = position.coords.longitude;
 
-        function initMap() {
-            // The location of Uluru
-            const orebro = { lat: 59.2798962873462, lng: 15.21309606623989 };
-            // The map, centered at Uluru
-            const map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 8,
-                center: orebro,
-            });
-            // The marker, positioned at Uluru
-            const marker = new google.maps.Marker({
-                position: orebro,
-                label: "person 1",
-                map: map,
-            });
+      var layer = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        features: [
+          new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([long, latt]))
+          }),
+        ]
+      })
+    });
 
-            const marker2 = new google.maps.Marker({
-                position: { lat: 59.2798962873462, lng: 16.21309606623989 },
-                label: "person 2",
-                map: map,
-            });
+    map.addLayer(layer);
+    }
 
-            const marker3 = new google.maps.Marker({
-                position: { lat: 58.2798962873462, lng: 16.21309606623989 },
-                label: "test",
-                map: map,
-            });
+    var attribution = new ol.control.Attribution({
+      collapsible: false
+    });
 
-            const marker4 = new google.maps.Marker({
-                position: { lat: 58.2798962873462, lng: 15.21309606623989 },
-                label: "person 2",
-                map: map,
-            });
+    var map = new ol.Map({
+      controls: ol.control.defaults({ attribution: false }).extend([attribution]),
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM({
+            url: 'https://tile.openstreetmap.be/osmbe/{z}/{x}/{y}.png',
+            attributions: [ol.source.OSM.ATTRIBUTION, 'Tiles courtesy of <a href="https://geo6.be/">GEO-6</a>'],
+            maxZoom: 18
+          })
+        })
+      ],
+      target: 'map',
+      view: new ol.View({
+        center: ol.proj.fromLonLat([4.35247, 50.84673]),
+        maxZoom: 18,
+        zoom: 12
+      })
+    });
 
-            map.addListener("click", (mapsMouseEvent) => {
-                console.log(mapsMouseEvent.latLng);
-            });
-        }
-      
-    </script>
-  </head>
-  <body>
-    <div id="map"></div>
 
-    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMUO4OQDR8BcNbYAlZYJkhO739kebvKq8&callback=initMap&libraries=&v=weekly"
-      async
-    ></script>
-  </body>
+  </script>
+</body>
+
 </html>
