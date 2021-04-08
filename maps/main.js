@@ -31,7 +31,7 @@
 //Step 1: initialize communication with the platform
 // In your own code, replace variable window.apikey with your own apikey
 var platform = new H.service.Platform({
-apikey: window.apikey
+  apikey: window.apikey
 });
 var defaultLayers = platform.createDefaultLayers();
 
@@ -55,7 +55,7 @@ var ui = H.ui.UI.createDefault(map, defaultLayers);
 
 // Now use the map as required...
 window.onload = function () {
-addMarkersToMap(map);
+  addMarkersToMap(map);
 }
 function geoFindMe() {
 

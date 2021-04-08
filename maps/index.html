@@ -41,15 +41,11 @@
     }
 
     function showPosition(position) {
-      console.log(position.coords.latitude);
-      console.log(position.coords.longitude);
-      console.log(position.coords.accuracy);
+      console.log("Latitude: ",position.coords.latitude);
+      console.log("Longitude: ",position.coords.longitude);
+      console.log("accuracy within (m): ",position.coords.accuracy);
       latt = position.coords.latitude;
       long = position.coords.longitude;
-
-
-
-      var point1 = new ol.Feature({ geometry: new ol.geom.Point(ol.proj.fromLonLat([long, latt]) )} );  
 
       var pointStyle = new ol.style.Style({
         image: new ol.style.Icon({
@@ -57,20 +53,42 @@
           scale: 2,
           src: 'icon.png',
         }), 
-        text: new ol.style.Text({
-          placement: 'point', 
-          fill: new ol.style.Fill({color: '#fff'}),
-          stroke: new ol.style.Stroke({color: '#000', width: '2'})
-        })
       })
 
-      point1.setStyle(pointStyle);
+      
+      
+      // defining features array                                             longitude, lattitude
+      var positionarray = [ //                                                     |       |
+        point1 = new ol.Feature({ geometry: new ol.geom.Point(ol.proj.fromLonLat([long, latt]))}),
+        point2 = new ol.Feature({ geometry: new ol.geom.Point(ol.proj.fromLonLat([0, 0]))})
+      ];
+      
+      for (let i = 0; i < positionarray.length; i++) {
+        positionarray[i].setStyle(pointStyle);
+      }
+
+      console.log(positionarray[0].getStyle().getText())
+      console.log(positionarray[0].getStyle().setText(new ol.style.Text({
+          placement: 'point', 
+          fill: new ol.style.Fill({color: '#fff'}),
+          stroke: new ol.style.Stroke({color: '#000', width: '2'}),
+          text: "hello there",
+          offsetY: -70,
+          scale: 2
+        })))
+
+      console.log(positionarray[1].getStyle().setText(new ol.style.Text({
+          placement: 'point', 
+          fill: new ol.style.Fill({color: '#fff'}),
+          stroke: new ol.style.Stroke({color: '#000', width: '2'}),
+          text: "burhhhhh",
+          offsetY: -70,
+          scale: 2
+        })))
 
       var layer = new ol.layer.Vector({
         source: new ol.source.Vector({
-          features: [
-            point1
-          ]
+          features: positionarray
         })
       }); 
 
